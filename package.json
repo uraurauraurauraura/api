@@ -1,56 +1,77 @@
 {
-  "name": "openmiq-api",
-  "version": "0.1.0",
-  "private": true,
-  "description": "Self-hosted Web API for OpenMiQ's quote image generation, based on OpenMiQ (a Discord bot)",
+  "name": "@openmiq/discord-bot",
+  "version": "1.0.0",
+  "description": "Open Source Discord MiQ Bot (for self-host)",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OpenMiQ/api.git"
+    "url": "git+https://github.com/OpenMiQ/discord-bot.git"
   },
+  "keywords": [
+    "discord",
+    "discord-bot",
+    "self-hosted"
+  ],
   "author": "otoneko. (https://github.com/otnc)",
   "license": "AGPL-3.0-or-later",
   "type": "module",
-  "packageManager": "pnpm@11.25.0",
+  "packageManager": "pnpm@10.34.5",
   "bugs": {
-    "url": "https://github.com/OpenMiQ/api/issues"
+    "url": "https://github.com/OpenMiQ/discord-bot/issues"
   },
-  "homepage": "https://github.com/OpenMiQ/api#readme",
-  "engines": {
-    "node": ">=24"
-  },
+  "homepage": "https://github.com/OpenMiQ/discord-bot#readme",
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "eslint . && pnpm --filter @makeitaquote/openmiq run ci",
-    "format": "prettier --write . && pnpm --filter @makeitaquote/openmiq run format",
-    "format:check": "prettier --check . && pnpm --filter @makeitaquote/openmiq run format:check",
-    "typecheck": "turbo run typecheck",
-    "test": "turbo run test",
-    "db:generate": "drizzle-kit generate --config drizzle/drizzle.config.ts",
-    "db:migrate": "drizzle-kit migrate --config drizzle/drizzle.config.ts",
-    "invite": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/invite.mjs",
-    "webhook": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/webhook.mjs",
-    "reset-users": "pnpm --filter @openmiq/api run reset-users",
+    "test": "vitest run",
+    "setup": "miq install all",
+    "build": "tsdown",
+    "dev": "tsx watch --env-file-if-exists=.env --env-file-if-exists=.env.local src/index.ts",
+    "start": "node --env-file=.env dist/index.js",
+    "deploy:commands": "tsdown && node dist/deployCommandsCli.js",
+    "deploy:images": "tsdown && node dist/deployImagesCli.js",
+    "deploy": "tsdown && node dist/deploy.js",
     "pm2:start": "pm2 start ecosystem.config.cjs",
     "pm2:stop": "pm2 stop ecosystem.config.cjs",
     "pm2:restart": "pm2 restart ecosystem.config.cjs",
-    "pm2:logs": "pm2 logs",
+    "pm2:logs": "pm2 logs $(node -p \"require('./ecosystem.config.cjs').apps[0].name\")",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "checkupdates": "ncu"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "discord.js": "^14.28.1",
+    "dotenv": "^18.0.9",
+    "makeitaquote": "^12.1.5",
+    "mustache": "^4.2.0",
+    "pngjs": "^7.0.0",
+    "pnpm": "^12.18.0",
+    "pureimage": "^0.4.20",
+    "quick-lru": "^7.3.0",
+    "write-file-atomic": "^8.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^26.4.1",
-    "eslint": "^10.10.0",
+    "@napi-rs/canvas": "^1.0.13",
+    "@types/mustache": "^4.2.6",
+    "@types/node": "^24.13.3",
+    "@types/pngjs": "^6.0.5",
+    "@types/write-file-atomic": "^4.0.3",
+    "eslint": "^10.9.1",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-svelte": "^3.23.0",
-    "globals": "^17.12.0",
+    "globals": "^17.11.0",
     "npm-check-updates": "^23.1.0",
     "prettier": "^3.9.6",
-    "prettier-plugin-svelte": "^4.1.1",
-    "svelte-eslint-parser": "^1.8.1",
-    "drizzle-kit": "^0.31.10",
-    "turbo": "^2.10.12",
+    "tsdown": "^0.22.14",
+    "tsx": "^4.23.12",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.69.0"
+    "typescript-eslint": "^8.68.0",
+    "vitest": "^4.1.11"
+  },
+  "allowScripts": {
+    "pnpm@12.18.0": true
   }
 }
